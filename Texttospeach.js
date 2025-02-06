@@ -74,3 +74,6 @@ const speechtotext = (storylineVar, language = 'en-US') => {
 
   recognition.start();
 };
+
+
+isme previous speech text bhi show kr rha hai jb new record krte hai to previos ko bhi add krke dikhata hai 
