@@ -19,6 +19,7 @@ const initializeSpeechRecognition = (language = 'en-US') => {
   // Start event: Triggered when recognition starts
   recognition.addEventListener('start', () => {
     recognizing = true;
+    currentTranscript = '';  // Reset currentTranscript when a new recognition starts
     console.log('Speech recognition started');
   });
 
