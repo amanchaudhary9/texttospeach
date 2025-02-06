@@ -2,7 +2,6 @@ let recognition;
 let recognizing = false;
 let currentStorylineVar = '';
 let currentTranscript = '';
-let previousTranscript = '';
 
 const initializeSpeechRecognition = (language = 'en-US') => {
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
