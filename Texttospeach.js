@@ -2,6 +2,7 @@ let recognition;
 let recognizing = false;
 let currentStorylineVar = '';
 let currentTranscript = '';
+let previousTranscript = '';  // Reset previousTranscript to ensure we only show the current speech
 
 const initializeSpeechRecognition = (language = 'en-US') => {
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -17,6 +18,7 @@ const initializeSpeechRecognition = (language = 'en-US') => {
 
   recognition.addEventListener('start', () => {
     recognizing = true;
+    currentTranscript = '';  // Clear previous transcript at the start of new recognition
     console.log('Speech recognition started');
   });
 
@@ -31,11 +33,13 @@ const initializeSpeechRecognition = (language = 'en-US') => {
     for (let i = event.resultIndex; i < event.results.length; i++) {
       const transcript = event.results[i][0].transcript;
       if (event.results[i].isFinal) {
-        currentTranscript += transcript + ' ';
+        currentTranscript = transcript;  // Replace currentTranscript with final result
       } else {
-        interimTranscript += transcript;
+        interimTranscript += transcript; // Capture interim text if available
       }
     }
+
+    // Update Storyline variable with only currentTranscript
     const player = GetPlayer();
     player.SetVar(currentStorylineVar, currentTranscript + interimTranscript);
     console.log(`Interim text: ${currentTranscript + interimTranscript}`);
@@ -48,10 +52,13 @@ const initializeSpeechRecognition = (language = 'en-US') => {
 
 const updateStorylineVariable = () => {
   const player = GetPlayer();
-  const finalTranscript = (currentTranscript.trim()).trim();
+  
+  // Only set the final currentTranscript (i.e., last recognized speech)
+  const finalTranscript = currentTranscript.trim();
   player.SetVar(currentStorylineVar, finalTranscript);
   console.log(`Final text: ${finalTranscript}`);
-  previousTranscript = finalTranscript;
+
+  // Reset currentTranscript for the next speech
   currentTranscript = '';
 };
 
